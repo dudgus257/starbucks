@@ -1,0 +1,238 @@
+@ 1. 검색 창 @
+
+CSS
+.search{
+	width: 50px
+}
+.search.focused{
+	width: 180px
+}
+
+JS
+const searchEl = document.querySelector('.search')
+const searchInputEl = document.querySelector('input')
+
+searchEl.addEventListener('click', function(){
+	searchInputEl.focus()
+})
+
+searchInputEl.addEventListener('focus', function(){
+	searchEl.classList.add('focused')
+	searchInputEl.setAttribute('placeholder', '통합검색')
+})
+
+
+searchInputEl.addEventListener('blur', function(){
+	searchEl.classList.remove('focused')
+	searchInputEl.setAttribute('placeholder', '')
+})
+
+
+
+@@ 2. 뱃지, to-top 버튼 보이기 / 감추기 @@
+
+HTML
+// LODASH
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+// GSAP
+script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.3/gsap.min.js" integrity="sha512-7Au1ULjlT8PP1Ygs6mDZh9NuQD0A5prSrAUiPHMXpU6g3UMd8qesVnhug5X4RoDr35x5upNpx0A6Sisz1LSTXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+CSS
+
+JS
+const badgeEl = document.querySelector('header .badges')
+const toTopEl = document.querySelector('#to-top')
+
+window.addEventListener('scroll', _.throttle(function(){
+	console.log(window.scrollY);
+	if(window.scrollY > 500){
+		gsap.to(badgeEl, .6,{
+				opacity: 0,
+				display: 'none'
+			})
+		gsap.to(toTopEl, .2,{
+				x: 0
+			})
+	}else{
+		gsap.to(badgeEl, .6,{
+				opacity: 1,
+				display: 'block'
+			})
+		gsap.to(toTopEl, .2,{
+				x: 100
+			})
+		}
+}, 300))
+
+toTopEl.addEventListener('click', function(){
+	gsap.to(window, .7,{
+				scrollTo: 0		
+			})
+})
+
+3. VISUAL 이미지 순차적으로 보이기
+CSS
+.visual .fade-in{
+	opacity: 0
+}
+
+JS
+const fadeEls = document.querySelectorAll('.visual .fade-in')
+
+fadeEls.forEach(function(fadeEl, index){
+	gsap.to(fadeEl, 1,{
+				delay: (index + 1) * .7,
+				opacity: 1
+			})
+});
+
+4. Swiper: notice-line
+HTML
+// SWIPER
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+CSS
+
+JS
+new Swiper('.notice-line .swiper', {
+	direction: 'vertical',
+	loop: true,
+	autoplay: true
+});
+
+5. Swiper: promotion
+HTML
+
+CSS
+
+JS
+new Swiper('.promotion .swiper', {
+	slidesPerView: 3,
+	spaceBetween: 10,
+	centeredSlides: true,
+	loop: true,
+	pagination: {
+			el: '.promotion .swiper-pagination',
+			clickable: true	
+		},
+	navigation: {
+			prevEl: '.promotion .swiper-prev',
+			nextEl: '.promotion .swiper-next'
+		}
+});
+
+6. Swiper: awards
+HTML
+
+CSS
+
+JS
+new Swiper('.awards .swiper', {
+	slidesPerView: 5,
+	spaceBetWeen: 30,
+	autoplay: true,
+	loop: true,
+	navigation: {
+			prevEl: '.awards .swiper-prev',
+			nextEl: 'awards .swiper-next'
+		}
+});
+
+6. toggle-promotion 누르면 창 안 보이게
+const promotionEl = document.querySelector('.promotion')
+const promotionToggleBtn = document.querySelector('.promotion .toggle-promotion')
+let isHidePromotion = false;
+
+promotionToggleBtn.addEventListener('click', function(){
+	isHidePromotion = !isHidePromotion
+	if(isHidePromotion){
+				promotionEl.classList.add('hide')
+			}else{
+				promotionEl.classList.remove('hide')
+				}	
+})
+
+7. 떠다니는 아이콘
+HTML
+
+CSS
+
+JS
+// 범위 랜덤 함수(소수점 2자리까지)
+function random(min, max) {
+	// .tofixed()를 통해 반환된 문자 데이터를,
+	// parseFloat() 을 통해 소수점을 가지는 숫자 데이터로 변환
+	return parseFloat((Math.random() * (max - min) + min).tofixed(2))
+}
+
+function floatingObject(selector, delay, size) {
+	gsap.to(selector, random(1.5, 2.5), {
+			y: size,
+			repeat: -1, // 무한 반복
+			yoyo: true,
+			ease: power1.easeInOut,
+			delay: random(0, delay)
+		});
+}
+
+floatingObject('floating1', 1, 15);
+floatingObject('floating2', .5, 15);
+floatingObject('floating3', 1.5, 20);
+
+8. Scroll Magic
+HTML
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js" integrity="sha512-8E3KZoPoZCD+1dgfqhPbejQBnQfBXe8FuwL4z/c8sTrgeDMFEnoyTlH3obB4/fV+6Sg0a0XF+L/6xS4Xx1fUEg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+CSS
+.back-to-position {
+	opacity: 0;
+	transition: 1s;
+}
+.back-to-position.to-right {
+	transform: translateX(-150px);
+}
+.back-to-position.to-left {
+	transform: translateX(150px);
+}
+.show .back-to-position {
+	opacity: 1;
+	transform: translateX(0);
+}
+.show .back-to-position.delay-0 {
+	transition-delay: 0s
+}
+.show .back-to-position.delay-1 {
+	transition-delay: .3s
+}
+.show .back-to-position.delay-2 {
+	transition-delay: .6s
+}
+.show .back-to-position.delay-3 {
+	transition-delay: .9s
+}
+
+JS
+const spyEls = document.querySelectorAll('section.scroll-spy');
+spyEls.forEach(function(spyEl){
+	new ScrollMagic // 생성자 함수
+		.Scene({						// 특정한 요소를 감시하는 옵션을 지정해 주는 메소드
+				triggerElement: spyEl,	
+				triggerHook: .8s
+			})
+		.setClassToggle(spyEl, 'show') 			// 'show'라는 클래스를 넣었다 뺐다 할 수 있는 메소드
+		.addTo(new ScrollMagic.Controller());			// scrollmagic 이라는 자바스크립트 라이브러리를 사용하기위에 필요한 컨트롤러 개념의 메소드
+})
+
+9. 연도 자동 계산
+HTML
+<span class="this-year"></span>
+
+JS
+const thisYear = document.querySelector('.this-year');
+thisYear.textContent = new Date().getFullYear();
+
+
+
+
